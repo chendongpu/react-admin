@@ -9,18 +9,19 @@
     "antd": "^4.14.0",
     "babel-plugin-import": "^1.13.3",
     "customize-cra": "^1.0.0",
+    "less-loader": "^8.0.0",
     "react": "^17.0.1",
     "react-app-rewired": "^2.1.8",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1"
   },
-    "scripts": {
-      "start": "react-app-rewired start",
-      "build": "react-app-rewired build",
-      "test": "react-app-rewired test",
-      "eject": "react-app-rewired eject"
-    },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
