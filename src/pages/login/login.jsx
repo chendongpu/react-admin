@@ -35,7 +35,22 @@ export default class Login  extends Component{
                     <Form.Item
                         label="用户名"
                         name="username"
-                        rules={[{ required: true, message: '请输入用户名!' }]}
+                        rules={[{ required: true, message: '请输入用户名!' },
+                            // { min: 4, message: '用户名至少4位!' },
+                            // {
+                            //     max: 10,
+                            //     message: '用户名最长10位!',
+                            // },
+                            {
+                                validator: (_, value) =>{
+                                    if(value.length >= 6 && value.length<=10) {
+                                        return Promise.resolve()
+                                    }else{
+                                        return Promise.reject('密码长度必须是6~10位')
+                                    }
+                                }
+                            }
+                            ]}
                     >
                         <Input />
                     </Form.Item>
