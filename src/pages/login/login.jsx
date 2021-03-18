@@ -13,21 +13,30 @@ const tailLayout = {
 };
 
 
-const onFinish =(async (values)=>{
-    console.log('Success:', values);
-    const response = await reqlogin(values.username,values.password);
-    console.log("请求成功",response);
 
-
-}) ;
-
-const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-};
 
 export default class Login  extends Component{
 
     render(){
+
+        const onFinish =(async (values)=>{
+            console.log('Success:', values);
+            const response = await reqlogin(values.username,values.password);
+            console.log("请求成功",response);
+            if(response.code===0){
+                message.success("登录成功");
+                this.props.history.replace('/')
+            }else{
+                message.error(response.msg);
+            }
+
+
+        }) ;
+
+        const onFinishFailed = errorInfo => {
+            console.log('Failed:', errorInfo);
+        };
+
         return (
             <Card title="用户登录" className="login-form">
                 <Form
