@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import { Form, Input, Button, Checkbox,Card,message } from 'antd';
 import "./login.css"
+import {reqlogin} from "../../api";
 
 
 const layout = {
@@ -14,6 +15,22 @@ const tailLayout = {
 
 const onFinish = values => {
     console.log('Success:', values);
+
+    reqlogin({
+        username:values.username,
+        password:values.password
+    }).then(res=>{
+        console.log(res);
+        if(res.status===200){
+            message.info('登录成功');
+        }else{
+            message.info(res.message);
+        }
+    }).catch(err=>{
+        console.log(err);
+        message.error('用户不存在');
+    })
+
 };
 
 const onFinishFailed = errorInfo => {
