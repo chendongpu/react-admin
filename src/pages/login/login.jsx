@@ -2,7 +2,8 @@ import React,{Component} from 'react';
 import { Form, Input, Button, Checkbox,Card,message } from 'antd';
 import "./login.css"
 import {reqlogin} from "../../api";
-
+import storeUtils from "../../utils/storeUtils";
+import {Redirect} from 'react-router-dom';
 
 const layout = {
     labelCol: { span: 8 },
@@ -19,13 +20,18 @@ export default class Login  extends Component{
 
     render(){
 
+        const token=storeUtils.getToken();
+        if(token){
+            return <Redirect to="/" />
+        }
         const onFinish =(async (values)=>{
             console.log('Success:', values);
             const response = await reqlogin(values.username,values.password);
             console.log("请求成功",response);
             if(response.code===0){
                 message.success("登录成功");
-                this.props.history.replace('/')
+                storeUtils.saveToken(response.result.access_token);
+                this.props.history.replace('/');
             }else{
                 message.error(response.msg);
             }
