@@ -13,22 +13,13 @@ const tailLayout = {
 };
 
 
-const onFinish = values => {
+const onFinish =(async (values)=>{
     console.log('Success:', values);
+    const response = await reqlogin(values.username,values.password);
+    console.log("请求成功",response);
 
-    reqlogin(values.username,values.password).then(res=>{
-        console.log(res);
-        if(res.status===200){
-            message.info('登录成功');
-        }else{
-            message.info(res.message);
-        }
-    }).catch(err=>{
-        console.log(err);
-        message.error('用户不存在');
-    })
 
-};
+}) ;
 
 const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
