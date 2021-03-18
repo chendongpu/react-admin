@@ -16,10 +16,7 @@ const tailLayout = {
 const onFinish = values => {
     console.log('Success:', values);
 
-    reqlogin({
-        username:values.username,
-        password:values.password
-    }).then(res=>{
+    reqlogin(values.username,values.password).then(res=>{
         console.log(res);
         if(res.status===200){
             message.info('登录成功');
