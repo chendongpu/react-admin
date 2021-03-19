@@ -1,12 +1,12 @@
 import  React,{Component} from 'react';
 import {Layout,Menu} from "antd";
 import logo from "../../assets/logo.svg";
-import {Link} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
 import menuList from '../../config/menuConfig'
 const { SubMenu } = Menu;
 const {Header,Sider} =Layout;
 
-export default class Index extends Component{
+class Index extends Component{
 
 
     getMenuNodes=(menuList)=>{
@@ -28,6 +28,11 @@ export default class Index extends Component{
     };
 
     render(){
+
+        const path=this.props.location.pathname;
+
+        console.log("path",path);
+
         return (
             <Sider>
                 <Header style={{marginTop:'20px'}}>
@@ -47,5 +52,5 @@ export default class Index extends Component{
     }
 }
 
-
+export default withRouter(Index)
 
