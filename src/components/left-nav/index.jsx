@@ -10,6 +10,8 @@ class Index extends Component{
 
 
     getMenuNodes=(menuList)=>{
+        const path=this.props.location.pathname;
+
         return menuList.map(item=>{
             if(!item.children){
                 return (
@@ -18,6 +20,12 @@ class Index extends Component{
                     </Menu.Item>
                 );
             }else{
+
+                const cItem=item.children.find(cItem=>cItem.key===path);
+                if(cItem){
+                    this.openKey=item.key;
+                }
+
                 return (
                     <SubMenu key={item.key} title={item.title}>
                         {this.getMenuNodes(item.children)}
@@ -27,11 +35,17 @@ class Index extends Component{
         })
     };
 
+
+    componentWillMount(){
+        this.menuNodes=this.getMenuNodes(menuList);
+    }
+
     render(){
 
         const path=this.props.location.pathname;
 
-        console.log("path",path);
+        const openKey=this.openKey;
+
 
         return (
             <Sider>
@@ -39,13 +53,13 @@ class Index extends Component{
                     <img src={logo} />
                 </Header>
                 <Menu
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
+                    selectedKeys={[path]}
+                    defaultOpenKeys={[openKey]}
                     mode="inline"
                     theme="dark"
 
                 >
-                {this.getMenuNodes(menuList)}
+                {this.menuNodes}
                 </Menu>
             </Sider>
         )
