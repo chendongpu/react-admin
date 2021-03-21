@@ -15,6 +15,20 @@ const menuList=[{
                 key:"/product"
             }
         ]
+    },
+    {
+        title:"店铺",
+        key:"/shop",
+        children:[
+            {
+                title:"店铺装修",
+                key:"/decorate"
+            },
+            {
+                title:"店铺设置",
+                key:"/setting"
+            }
+        ]
     }
 ];
 export default menuList;

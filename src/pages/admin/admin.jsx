@@ -10,6 +10,8 @@ import LeftNav from '../../components/left-nav'
 import Home from '../home/home';
 import Category from '../category/category';
 import Product from '../product/product';
+import Decorate from "../decorate/decorate";
+import Setting from "../setting/setting";
 
 const {Footer,Content} =Layout;
 
@@ -39,6 +41,8 @@ export default class Admin  extends Component{
                         <Route path="/home" component={Home} />
                         <Route path="/category" component={Category} />
                         <Route path="/product" component={Product} />
+                        <Route path="/decorate" component={Decorate} />
+                        <Route path="/setting" component={Setting} />
                         <Redirect to="/home" />
                     </Switch>
                 </Content>
