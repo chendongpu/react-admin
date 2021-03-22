@@ -1,9 +1,25 @@
 import  React,{Component} from 'react';
+import { connect } from "react-redux";
+import {
+    getGoodsCategoryList,
+} from "../../actions/goods/category";
 
-export default class Category extends Component {
+class Category extends Component {
+
+
+    componentDidMount() {
+        const { dispatch } = this.props;
+        console.log("dispatch",dispatch);
+        dispatch(getGoodsCategoryList())
+    }
+
+
     render() {
         return (
-            <div>category</div>
+
+                <div>category</div>
         )
     }
 }
+
+export default connect(props=>props)(Category);

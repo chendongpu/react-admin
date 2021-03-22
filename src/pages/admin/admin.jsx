@@ -12,6 +12,8 @@ import Category from '../category/category';
 import Product from '../product/product';
 import Decorate from "../decorate/decorate";
 import Setting from "../setting/setting";
+import store from "../../store";
+import {Provider} from 'react-redux';
 
 const {Footer,Content} =Layout;
 
@@ -30,24 +32,29 @@ export default class Admin  extends Component{
 
 
 
-        return <Layout style={{height:'100%'}}>
+        return (
+            <Provider store={store}>
+                <Layout style={{height:'100%'}}>
 
-            <LeftNav>
-            </LeftNav>
-            <Layout>
-                <Header />
-                <Content>
-                    <Switch>
-                        <Route path="/home" component={Home} />
-                        <Route path="/category" component={Category} />
-                        <Route path="/product" component={Product} />
-                        <Route path="/decorate" component={Decorate} />
-                        <Route path="/setting" component={Setting} />
-                        <Redirect to="/home" />
-                    </Switch>
-                </Content>
-                <Footer>Footer</Footer>
-            </Layout>
-        </Layout>
+                    <LeftNav>
+                    </LeftNav>
+                    <Layout>
+                        <Header />
+                        <Content>
+                            <Switch>
+                                <Route path="/home" component={Home} />
+                                <Route path="/category" component={Category} />
+                                <Route path="/product" component={Product} />
+                                <Route path="/decorate" component={Decorate} />
+                                <Route path="/setting" component={Setting} />
+                                <Redirect to="/home" />
+                            </Switch>
+                        </Content>
+                        <Footer>Footer</Footer>
+                    </Layout>
+                </Layout>
+            </Provider>
+            )
+
     }
 }
