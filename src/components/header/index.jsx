@@ -1,20 +1,41 @@
 import  React,{Component} from 'react';
 import "./header.css"
-import {Layout, Menu, Dropdown,Avatar,message ,Badge} from "antd";
+import {Layout, Menu, Dropdown,message ,Badge,Modal} from "antd";
 import { DownOutlined } from '@ant-design/icons';
+import EditPasswordForm from "../edit-password-form/index"
 const {Header} =Layout;
 
+
 export default class Index extends Component{
+
+    state = {
+        passwordEditShow: false
+    };
+
+
+
     render(){
+
+        const { passwordEditShow } = this.state;
+
+        console.log("passwordEditShow:",passwordEditShow);
+
         const popMenu=(
             <Menu onClick={(p)=>{
-
+                console.log("p:",p);
+                if(p.key==="passwordEdit"){
+                    return this.setState({
+                        passwordEditShow: true
+                    })
+                }else{
                     message.success(p.key);
+                }
+
+
 
             }}>
-                <Menu.Item key="noti">通知中心</Menu.Item>
-                <Menu.Item key="setting">设置</Menu.Item>
-                <Menu.Item key="logout">退出</Menu.Item>
+                <Menu.Item key="passwordEdit">修改密码</Menu.Item>
+                <Menu.Item key="logout">退出登录</Menu.Item>
             </Menu>
         );
         return (
@@ -24,11 +45,28 @@ export default class Index extends Component{
                 </div>
                 <Dropdown overlay={popMenu}>
                     <div>
-                        <Avatar>U</Avatar>
-                        <Badge><span style={{color:'#fff'}}>超级管理员<DownOutlined /></span></Badge>
+                        <Badge><span>admin<DownOutlined /></span></Badge>
                     </div>
 
                 </Dropdown>
+
+
+                <Modal
+                    title="修改密码"
+                    visible={passwordEditShow}
+                    footer={null}
+                    onCancel={() => {
+                        this.setState({ passwordEditShow: false });
+                    }}
+                >
+                    <EditPasswordForm
+                        {...this.props}
+                        close={() => {
+                            this.setState({ passwordEditShow: false });
+                        }}
+                    />
+                </Modal>
+
             </Header>
         )
     }
