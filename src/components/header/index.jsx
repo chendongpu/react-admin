@@ -1,17 +1,19 @@
 import  React,{Component} from 'react';
 import "./header.css"
 import {Layout, Menu, Dropdown,message ,Badge,Modal} from "antd";
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import {withRouter} from 'react-router-dom';
 import { DownOutlined } from '@ant-design/icons';
 import EditPasswordForm from "../edit-password-form/index"
+import storeUtils from "../../utils/storeUtils";
 const {Header} =Layout;
 
 
-export default class Index extends Component{
+class Index extends Component{
 
     state = {
         passwordEditShow: false
     };
-
 
 
     render(){
@@ -27,8 +29,23 @@ export default class Index extends Component{
                     return this.setState({
                         passwordEditShow: true
                     })
-                }else{
-                    message.success(p.key);
+                }
+                if(p.key==="logout"){
+                  return  Modal.confirm({
+                      title: '提示',
+                      icon: <ExclamationCircleOutlined />,
+                      content: '确定要退出登录吗？',
+                      okText: '确认',
+                      cancelText: '取消',
+                      onOk:()=>{
+                          console.log("ok");
+                          storeUtils.removeToken();
+                            this.props.history.replace('/login')
+                        },
+                        onCancel:()=>{
+                            console.log("cancel");
+                        }
+                  });
                 }
 
 
@@ -71,3 +88,4 @@ export default class Index extends Component{
         )
     }
 }
+export default withRouter(Index)
