@@ -6,14 +6,50 @@ import {
 
 import {reqcategorys, reqlogin} from '../../api/index';
 
-import {Card, Table, Button, Popconfirm, Upload, message} from 'antd'
+import {Card, Table, Switch, Space,Button, Popconfirm, Upload, message} from 'antd'
 import storeUtils from "../../utils/storeUtils";
 
 class Category extends Component {
 
     state={
         loading:false,
-        categorys:[]
+        categorys:[],
+        expandedRowKeys:[]
+    };
+
+    getExpandedRowKeys = (e) => {
+        const _array = []
+        const getListKey = (list) => {
+            list.map((a) => {
+                _array.push(a.id)
+                if (a.children && a.children.length) {
+                    getListKey(a.children)
+                }
+            })
+        }
+        getListKey(e)
+        return _array
+    }
+
+    toCategoryTree = (list) => {
+        const newArray = [];
+        list.map((e) => {
+            e.children = e._child;
+            e.title=e.name;
+            delete e.icon;
+            e.key=e.id;
+            newArray.push(e);
+            console.log("=e=",e);
+
+            if ( e.children.length) {
+                return this.toCategoryTree(e.children)
+            }
+
+
+
+
+        });
+        return newArray
     };
 
     getCategory=async ()=>{
@@ -24,22 +60,20 @@ class Category extends Component {
         console.log("请求成功",response);
         if(response.code===0){
             console.log(response);
+            let tree=this.toCategoryTree(response.result.list);
             this.setState({
                 loading:false,
-                categorys:response.result.list
+                categorys:tree
             })
         }else{
             message.error(response.msg);
         }
     };
 
+
+
     initColumns=()=>{
         this.columns=[{
-            title:'序号',
-            key:'id',
-            width:80,
-            align:'center',
-            render:(txt,record,index)=>index+1
         },{
             title:'分类名字',
             dataIndex:'name'
@@ -49,7 +83,6 @@ class Category extends Component {
                 return (
                     <div>
                         <Button type="primary" size="small">修改</Button>
-                        <Button type="primary" size="small" style={{margin:"0 1rem"}}>查看子分类</Button>
                         <Popconfirm title="确定要删除此项么?" onCancel={()=>{console.log("用户取消删除")}} onConfirm={()=>{console.log("用户确认删除")}}>
                             <Button type="danger" style={{margin:"0 1rem"}} size="small">删除</Button>
                         </Popconfirm>
@@ -71,10 +104,15 @@ class Category extends Component {
     }
 
 
-    render() {
-        const {loading,categorys}=this.state;
 
-        let title="一级分类";
+
+    render() {
+
+
+
+        const {loading,categorys,expandedRowKeys}=this.state;
+
+
 
         console.log("categorys",categorys);
 
@@ -82,12 +120,44 @@ class Category extends Component {
         return (
 
             <Card
-                title={title} extra={
-                <Button type="primary" size="small" >添加分类</Button>
-            }
+                title={
+                    <div>
+                    <Button type="primary" size="small" >添加分类</Button>
+                        <Button
+                            onClick={() => {
+                                this.setState({
+                                    expandedRowKeys: this.getExpandedRowKeys(categorys)
+                                })
+                            }}
+                        >
+                            全部展开
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                this.setState({
+                                    expandedRowKeys: []
+                                })
+                            }}
+                        >
+                            全部折叠
+                        </Button>
+                    </div>
+                }
             >
 
-                <Table loading={loading}  pagination={{defaultPageSize:2}}  rowKey="id" columns={this.columns} bordered dataSource={categorys} />
+                {categorys && categorys.length ? <Table
+                    className="m-cover-ant-table"
+                    columns={this.columns}
+                    expandIconAsCell={false}
+                    expandRowByClick={true}
+                    expandedRowKeys={expandedRowKeys}
+                    defaultExpandAllRows={true}
+                    dataSource={categorys}
+
+                    pagination={false}/> : '暂无数据'}
+
+
+
             </Card>
         )
     }
