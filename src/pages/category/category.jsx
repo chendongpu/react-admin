@@ -4,10 +4,24 @@ import {
     getGoodsCategoryList,
 } from "../../actions/goods/category";
 
-import {Card, Table, Button, Popconfirm, Upload} from 'antd'
+import {reqcategorys, reqlogin} from '../../api/index';
+
+import {Card, Table, Button, Popconfirm, Upload, message} from 'antd'
+import storeUtils from "../../utils/storeUtils";
 
 class Category extends Component {
 
+    async componentWillMount(){
+
+
+        const response = await reqcategorys(0);
+        console.log("请求成功",response);
+        if(response.code===0){
+           console.log(response);
+        }else{
+            message.error(response.msg);
+        }
+    }
 
     componentDidMount() {
         const { dispatch } = this.props;
@@ -17,6 +31,8 @@ class Category extends Component {
 
 
     render() {
+
+
         let title="一级分类";
 
         const dataSource=[
