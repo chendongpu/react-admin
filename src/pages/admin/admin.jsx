@@ -40,7 +40,7 @@ export default class Admin  extends Component{
                     </LeftNav>
                     <Layout>
                         <Header />
-                        <Content>
+                        <Content style={{'padding':'20px'}}>
                             <Switch>
                                 <Route path="/home" component={Home} />
                                 <Route path="/category" component={Category} />
