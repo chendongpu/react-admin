@@ -34,7 +34,7 @@ export default class Admin  extends Component{
 
         return (
             <Provider store={store}>
-                <Layout style={{height:'100%'}}>
+                <Layout style={{height:'auto','min-height':'100%'}}>
 
                     <LeftNav>
                     </LeftNav>
