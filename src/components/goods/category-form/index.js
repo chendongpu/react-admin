@@ -17,6 +17,7 @@ export default function CategoryForm(props){
             let sj_=sj.reverse();
             setDef(sj_);
             form.setFieldsValue(record);
+            setPid(sj_.length>0?sj_[sj_.length-1]:0);
         }
 
     },[visible]);
@@ -70,8 +71,7 @@ export default function CategoryForm(props){
     }
 
     const onChange=(value) => {
-        console.log("vvvaluevvv",value);
-        setPid(value.length>1?value[value.length-1]:0);
+        setPid(value.length>0?value[value.length-1]:0);
     }
 
     return (

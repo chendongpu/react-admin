@@ -4,7 +4,7 @@ import {
     getGoodsCategoryList,
 } from "../../actions/goods/category";
 
-import {reqcategorys, reqcategorysdel} from '../../api/index';
+import {reqcategorys, reqcategorysdel,reqcategorysadd,reqcategorysedit} from '../../api/index';
 
 import {Card, Table, Switch, Space,Button, Popconfirm, Upload, message} from 'antd'
 import storeUtils from "../../utils/storeUtils";
@@ -89,6 +89,26 @@ class Category extends Component {
     };
 
 
+    addCategory=async (values)=>{
+        const response = await reqcategorysadd(values);
+        console.log("添加成功",response);
+        if(response.code===0){
+            this.getCategory();
+        }else{
+            message.error(response.msg);
+        }
+    };
+
+    editCategory=async (values)=>{
+        const response = await reqcategorysedit(values);
+        console.log("修改成功",response);
+        if(response.code===0){
+            this.getCategory();
+        }else{
+            message.error(response.msg);
+        }
+    };
+
 
     initColumns=()=>{
         this.columns=[{
@@ -133,7 +153,7 @@ class Category extends Component {
 
 
 
-        const {loading,categorys,expandedRowKeys,modalVisible,record}=this.state;
+        const {loading,categorys,expandedRowKeys,modalVisible,record,pid}=this.state;
 
 
 
@@ -196,8 +216,20 @@ class Category extends Component {
                     pagination={false}/> : '暂无数据'}
 
                 <CategoryForm visible={modalVisible} closeHandler={()=>{this.setState({modalVisible:false});}} categorys={categorys}  record={record} onFinish={(values)=>{
-                console.log("===values====",values);
-                }} setPid={(pid)=>{console.log("Pid",pid)}}></CategoryForm>
+                    var id=0;
+                    if(record){
+                        id=record.id;
+                    }
+                    if(id){
+                        record.name=values.name;
+                        record.pid=pid;
+                        this.editCategory(record);
+                    }else{
+                        this.addCategory(values);
+                    }
+                    this.setState({modalVisible:false})
+                }} setPid={(pid)=>{
+                    this.setState({pid:pid})}}></CategoryForm>
             </Card>
 
         )

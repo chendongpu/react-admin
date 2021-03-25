@@ -10,3 +10,8 @@ export const reqcategorys=(pid)=>ajax('/admin/goodscategory/list',{pid},'GET',he
 
 
 export const reqcategorysdel=(id)=>ajax('/admin/goodscategory/del',{id},'POST',headers);
+
+export const reqcategorysadd=(values)=>ajax('/admin/goodscategory/add',values,'POST',headers);
+
+export const reqcategorysedit=(values)=>ajax('/admin/goodscategory/edit',values,'POST',headers);
+
