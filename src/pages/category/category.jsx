@@ -9,12 +9,17 @@ import {reqcategorys, reqcategorysdel} from '../../api/index';
 import {Card, Table, Switch, Space,Button, Popconfirm, Upload, message} from 'antd'
 import storeUtils from "../../utils/storeUtils";
 
+import CategoryForm from '../../components/goods/category-form/index'
+
 class Category extends Component {
 
     state={
         loading:false,
         categorys:[],
-        expandedRowKeys:[]
+        expandedRowKeys:[],
+        modalVisible:false,
+        record:{},
+        pid:0
     };
 
     getExpandedRowKeys = (e) => {
@@ -36,6 +41,8 @@ class Category extends Component {
         list.map((e) => {
             e.children = e._child;
             e.title=e.name;
+            e.label=e.name;
+            e.value=e.id;
             delete e.icon;
             e.key=e.id;
             newArray.push(e);
@@ -93,7 +100,10 @@ class Category extends Component {
             render:(txt,record,index)=>{
                 return (
                     <div>
-                        <Button type="primary" size="small">修改</Button>
+                        <Button type="primary" size="small" onClick={()=>{
+                            console.log("record",record);
+                            this.setState({modalVisible:true,record:record});
+                        }}>修改</Button>
                         <Popconfirm title="确定要删除此项么?" onCancel={()=>{console.log("用户取消删除")}} onConfirm={()=>{
                             this.delCategory(record.id);
                         }}>
@@ -123,7 +133,7 @@ class Category extends Component {
 
 
 
-        const {loading,categorys,expandedRowKeys}=this.state;
+        const {loading,categorys,expandedRowKeys,modalVisible,record}=this.state;
 
 
 
@@ -137,8 +147,10 @@ class Category extends Component {
             <Card
                 title={
                     <div>
-                    <Button type="primary" size="small" >添加分类</Button>
-                        <Button
+                    <Button type="primary" size="small" onClick={()=>{
+                        this.setState({modalVisible:true,record:undefined});
+                    }}>添加分类</Button>
+                        <Button size="small"  style={{margin:"0 1rem"}}
                             onClick={() => {
                                 this.setState({
                                     expandedRowKeys: this.getExpandedRowKeys(categorys)
@@ -147,7 +159,7 @@ class Category extends Component {
                         >
                             全部展开
                         </Button>
-                        <Button
+                        <Button size="small"  style={{margin:"0 1rem"}}
                             onClick={() => {
                                 this.setState({
                                     expandedRowKeys: []
@@ -183,9 +195,11 @@ class Category extends Component {
 
                     pagination={false}/> : '暂无数据'}
 
-
-
+                <CategoryForm visible={modalVisible} closeHandler={()=>{this.setState({modalVisible:false});}} categorys={categorys}  record={record} onFinish={(values)=>{
+                console.log("===values====",values);
+                }} setPid={(pid)=>{console.log("Pid",pid)}}></CategoryForm>
             </Card>
+
         )
     }
 }
