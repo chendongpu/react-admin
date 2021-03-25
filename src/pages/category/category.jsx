@@ -63,8 +63,9 @@ class Category extends Component {
             let tree=this.toCategoryTree(response.result.list);
             this.setState({
                 loading:false,
-                categorys:tree
-            })
+                categorys:tree,
+                expandedRowKeys :this.getExpandedRowKeys(tree)
+            });
         }else{
             message.error(response.msg);
         }
@@ -117,6 +118,8 @@ class Category extends Component {
         console.log("categorys",categorys);
 
 
+
+
         return (
 
             <Card
@@ -151,8 +154,21 @@ class Category extends Component {
                     expandIconAsCell={false}
                     expandRowByClick={true}
                     expandedRowKeys={expandedRowKeys}
-                    defaultExpandAllRows={true}
                     dataSource={categorys}
+                    onExpand={(bool, row) => {
+                        if (bool) {
+                            this.setState({
+                                expandedRowKeys: [...expandedRowKeys, row.id]
+                            })
+                        } else {
+                            const index = expandedRowKeys.findIndex((e) => e === row.id)
+                            const newArray = [...expandedRowKeys]
+                            newArray.splice(index, 1)
+                            this.setState({
+                                expandedRowKeys: newArray
+                            })
+                        }
+                    }}
 
                     pagination={false}/> : '暂无数据'}
 
