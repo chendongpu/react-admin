@@ -9,3 +9,4 @@ export const reqlogin=(username,password)=>ajax('/admin/member/login',{username,
 export const reqcategorys=(pid)=>ajax('/admin/goodscategory/list',{pid},'GET',headers);
 
 
+export const reqcategorysdel=(id)=>ajax('/admin/goodscategory/del',{id},'POST',headers);

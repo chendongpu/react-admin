@@ -4,7 +4,7 @@ import {
     getGoodsCategoryList,
 } from "../../actions/goods/category";
 
-import {reqcategorys, reqlogin} from '../../api/index';
+import {reqcategorys, reqcategorysdel} from '../../api/index';
 
 import {Card, Table, Switch, Space,Button, Popconfirm, Upload, message} from 'antd'
 import storeUtils from "../../utils/storeUtils";
@@ -71,6 +71,16 @@ class Category extends Component {
         }
     };
 
+    delCategory=async (id)=>{
+        const response = await reqcategorysdel(id);
+        console.log("删除成功",response);
+        if(response.code===0){
+            this.getCategory();
+        }else{
+            message.error(response.msg);
+        }
+    };
+
 
 
     initColumns=()=>{
@@ -84,7 +94,9 @@ class Category extends Component {
                 return (
                     <div>
                         <Button type="primary" size="small">修改</Button>
-                        <Popconfirm title="确定要删除此项么?" onCancel={()=>{console.log("用户取消删除")}} onConfirm={()=>{console.log("用户确认删除")}}>
+                        <Popconfirm title="确定要删除此项么?" onCancel={()=>{console.log("用户取消删除")}} onConfirm={()=>{
+                            this.delCategory(record.id);
+                        }}>
                             <Button type="danger" style={{margin:"0 1rem"}} size="small">删除</Button>
                         </Popconfirm>
                     </div>
@@ -152,7 +164,6 @@ class Category extends Component {
                     className="m-cover-ant-table"
                     columns={this.columns}
                     expandIconAsCell={false}
-                    expandRowByClick={true}
                     expandedRowKeys={expandedRowKeys}
                     dataSource={categorys}
                     onExpand={(bool, row) => {
