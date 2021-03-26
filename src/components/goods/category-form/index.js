@@ -7,6 +7,7 @@ export default function CategoryForm(props){
     const {visible,categorys,record,closeHandler,onFinish,setPid}=props;
 
     const [def,setDef]=useState([]);
+    const [newCategorys,setNewCategorys]=useState([]);
 
     useEffect(()=>{
         if(record===undefined){
@@ -18,6 +19,14 @@ export default function CategoryForm(props){
             setDef(sj_);
             form.setFieldsValue(record);
             setPid(sj_.length>0?sj_[sj_.length-1]:0);
+
+            //这里要深拷贝，浅拷贝的话会改变categorys的值
+            var newArr = JSON.parse(JSON.stringify(newArray));
+            newArr.map((e)=>{delete e.children});
+            let list = newArr.filter((e)=>{return (e.id!==record.id);});
+            let newCategorys= toTree(list);
+            setNewCategorys(newCategorys);
+
         }
 
     },[visible]);
@@ -42,6 +51,17 @@ export default function CategoryForm(props){
                 }
             })
         }
+        return newArray;
+    };
+
+    const toTree=(list,pid = 0)=>{
+        let newArray=[];
+        list.map((e)=>{
+            if(e.pid===pid){
+                e.children=toTree(list,e.id);
+                newArray.push(e);
+            }
+        });
         return newArray;
     };
 
@@ -87,7 +107,7 @@ export default function CategoryForm(props){
                 >
                     <Form.Item label="上级分类">
 
-                    <Cascader key={def} defaultValue={def} options={categorys} onChange={ onChange} changeOnSelect={true} placeholder="Please select" />
+                    <Cascader key={def} defaultValue={def} options={record===undefined?categorys:newCategorys} onChange={ onChange} changeOnSelect={true} placeholder="Please select" />
                 </Form.Item>
 
                     <Form.Item
