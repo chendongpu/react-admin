@@ -19,3 +19,7 @@ export const reqcategorysedit=(values)=>ajax('/admin/goodscategory/edit',values,
 
 export const reqgoods=(values)=>ajax('/admin/goods/list',values,'GET',headers);
 
+export const reqgoodsoffsale=(values)=>ajax('/admin/goods/offSale',values,'POST',headers);
+
+export const reqgoodsonsale=(values)=>ajax('/admin/goods/onSale',values,'POST',headers);
+

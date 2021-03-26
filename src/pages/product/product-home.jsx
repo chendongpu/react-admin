@@ -1,8 +1,9 @@
 import  React,{Component} from 'react';
-import {Card, Table, Button, Popconfirm, message} from 'antd'
+import {Card, Table, Button, Popconfirm, message,Switch} from 'antd'
 
 import {withRouter} from 'react-router-dom'
-import {reqgoods} from "../../api";
+import {reqgoods,reqgoodsoffsale,reqgoodsonsale} from "../../api";
+import moment from 'moment';
 
 class ProductHome extends Component {
 
@@ -10,6 +11,34 @@ class ProductHome extends Component {
         columns:[],
         loading:false,
         goods:[]
+    };
+
+    onSale=async (values)=>{
+        this.setState({
+            loading:true
+        });
+        const response = await reqgoodsonsale(values);
+        console.log("请求成功",response);
+        if(response.code===0){
+            console.log(response);
+            this.getGoods(1,10)
+        }else{
+            message.error(response.msg);
+        }
+    };
+
+    offSale=async (values)=>{
+        this.setState({
+            loading:true
+        });
+        const response = await reqgoodsoffsale(values);
+        console.log("请求成功",response);
+        if(response.code===0){
+            console.log(response);
+            this.getGoods(1,10)
+        }else{
+            message.error(response.msg);
+        }
     };
 
     getGoods=async (page,rows)=>{
@@ -33,10 +62,48 @@ class ProductHome extends Component {
     initColumns=()=>{
         this.setState({
             columns:
-                [{
+                [{  title:'商品图',
+                    dataIndex: 'img',
+                    render:(txt)=>{
+                        return <img src={txt} style={{width:'50px',height:'50px'}} />;
+                    }
                 },{
                     title:'商品标题',
                     dataIndex:'title'
+                },{
+                    title:'价格（元）',
+                    dataIndex:'price'
+                },
+                {
+                    title:'销量',
+                    dataIndex:'base_sale_num'
+                },{
+                    title:'库存',
+                    dataIndex:'stock'
+                },{
+                    title:'分类',
+                    dataIndex:'category_ids'
+                },{
+                    title:'创建时间',
+                    dataIndex:'create_time',
+                    render: e => moment(e * 1000).format('YYYY-MM-DD hh:mm'),
+                },{
+                    title: "上架状态",
+                    dataIndex: "is_on_sale",
+                    render: (text, record) => <Switch
+                        defaultChecked={!!text}
+                        onChange={(checked) => {
+                            if (checked) {
+                                console.log(" switch true ")
+                                //上架
+                                this.onSale({ids:[record.id]});
+                            } else {
+                                console.log(" switch false ")
+                                //下架
+                                this.offSale({ids:[record.id]});
+                            }
+                        }}
+                    />
                 },{
                     title:'操作',
                     render:(txt,record,index)=>{
