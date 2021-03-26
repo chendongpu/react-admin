@@ -17,3 +17,5 @@ export const reqcategorysadd=(values)=>ajax('/admin/goodscategory/add',values,'P
 
 export const reqcategorysedit=(values)=>ajax('/admin/goodscategory/edit',values,'POST',headers);
 
+export const reqgoods=(values)=>ajax('/admin/goods/list',values,'GET',headers);
+
