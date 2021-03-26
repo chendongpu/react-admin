@@ -105,7 +105,7 @@ export default function CategoryForm(props){
                     onFinishFailed={onFinishFailed}
                     name="basic"
                 >
-                    <Form.Item label="上级分类">
+                    <Form.Item label="上级分类" extra='如不选择，则默认为一级分类'>
 
                     <Cascader key={def} defaultValue={def} options={record===undefined?categorys:newCategorys} onChange={ onChange} changeOnSelect={true} placeholder="Please select" />
                 </Form.Item>
