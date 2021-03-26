@@ -1,5 +1,6 @@
 import  React from 'react';
 import {Form,Input,Button,message} from "antd";
+import { reqselfpassword} from "../../api";
 
 export default function EditPasswordForm(props) {
 
@@ -29,9 +30,19 @@ export default function EditPasswordForm(props) {
             }
         }
     };
+
+    const selfPassword=async (values)=>{
+        const response = await reqselfpassword(values);
+        if(response.code===0){
+            message.success('修改成功');
+        }else{
+            message.error(response.msg);
+        }
+    };
+
     const onFinish=values => {
-        console.log('Success:', values);
-    }
+        selfPassword(values);
+    };
 
     const onFinishFailed = errorInfo => {
         console.log('Failed:', errorInfo);

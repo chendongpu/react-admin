@@ -6,6 +6,8 @@ headers['Access-Token']=storeUtils.getToken();
 
 export const reqlogin=(username,password)=>ajax('/admin/member/login',{username,password},'POST');
 
+export const reqselfpassword=(values)=>ajax('/admin/member/selfPassword',values,'POST',headers);
+
 export const reqcategorys=(pid)=>ajax('/admin/goodscategory/list',{pid},'GET',headers);
 
 
