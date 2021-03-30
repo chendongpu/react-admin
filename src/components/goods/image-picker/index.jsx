@@ -15,26 +15,37 @@ export default function ImagePicker(props){
 
 
     const onOK=()=>{
-        console.log("ok click")
+        console.log("ok click");
+        setImages(imgs);
+        closeHandler();
+    };
 
+    const toggleChecked=(item)=>{
+        let tmp = data.map((d)=>{
+            if(item.id===d.id){
+                d.checked=(d.checked===1)?0:1;
+                //切换到选中时，加入图片地址,不选中就去掉图片地址
+                let tmp=[];
+                if(d.checked===1){
+                    tmp=imgs;
+                    tmp.push(d.url);
+                }else{
+                    tmp=imgs.filter((url)=>{
+                        if(url!==d.url){
+                            return url;
+                        }
+                    });
+                }
+                setImgs(tmp);
+            }
+            return d;
+        });
+        setData(tmp);
     };
 
     const imgClick=(e,item)=>{
-        console.log("imgClick click");
-        console.log("imgClick click",e.target.src);
-        console.log("item",item);
-        let tmp = data.map((d)=>{
-           if(item.id===d.id){
-             d.checked=(d.checked===1)?0:1;
-             return d;
-           }else{
-               return d;
-           }
-        });
-        setData(tmp);
-
-      // images.push(e.target.src);
-
+       toggleChecked(item);
+        console.log("imgs",imgs);
     };
 
     const getImages=async (page,rows)=>{
@@ -59,16 +70,7 @@ export default function ImagePicker(props){
     const onChange=(e,item)=> {
         console.log(`checked = ${e.target.checked}`);
         console.log("item",item);
-
-        let tmp = data.map((d)=>{
-            if(item.id===d.id){
-                d.checked=(d.checked===1)?0:1;
-                return d;
-            }else{
-                return d;
-            }
-        });
-        setData(tmp);
+        toggleChecked(item);
     };
 
     return (
