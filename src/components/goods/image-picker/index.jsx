@@ -59,6 +59,16 @@ export default function ImagePicker(props){
     const onChange=(e,item)=> {
         console.log(`checked = ${e.target.checked}`);
         console.log("item",item);
+
+        let tmp = data.map((d)=>{
+            if(item.id===d.id){
+                d.checked=(d.checked===1)?0:1;
+                return d;
+            }else{
+                return d;
+            }
+        });
+        setData(tmp);
     };
 
     return (
