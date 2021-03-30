@@ -19,10 +19,21 @@ export default function ImagePicker(props){
 
     };
 
-    const imgClick=(e)=>{
+    const imgClick=(e,item)=>{
         console.log("imgClick click");
         console.log("imgClick click",e.target.src);
-       images.push(e.target.src);
+        console.log("item",item);
+        let tmp = data.map((d)=>{
+           if(item.id===d.id){
+             d.checked=(d.checked===1)?0:1;
+             return d;
+           }else{
+               return d;
+           }
+        });
+        setData(tmp);
+
+      // images.push(e.target.src);
 
     };
 
@@ -31,6 +42,8 @@ export default function ImagePicker(props){
         console.log("请求成功",response);
         if(response.code===0){
             console.log(response);
+            let list= [...response.result.list];
+            list = list.map((a)=>{return {...a,checked:0}});
             setData(response.result.list);
             setTotal(response.result.total_number);
         }else{
@@ -78,9 +91,8 @@ export default function ImagePicker(props){
                             className="list-item"
                             key={item.id}
                         >
-                            <Checkbox className="checkbox" onChange={(e)=>{onChange(e,item)}} />
-                           <img src={item.url} style={{width:'100%',height:'100%'}} onClick={(e)=>{imgClick(e)}}/>
-
+                            <Checkbox className="checkbox" checked={item.checked==1?true:false} onChange={(e)=>{onChange(e,item)}} />
+                                <img src={item.url}   width={100} height={100} onClick={(e)=>{imgClick(e,item)}}   />
                         </List.Item>
                     )}
                 />
