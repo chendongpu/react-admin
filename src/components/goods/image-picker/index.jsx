@@ -117,12 +117,7 @@ export default function ImagePicker(props){
                 <List
                     grid={{
                         gutter: 16,
-                        xs: 1,
-                        sm: 2,
-                        md: 4,
-                        lg: 4,
-                        xl: 6,
-                        xxl: 3,
+                        column:3
                     }}
                     pagination={{
                         onChange: page => {
@@ -140,7 +135,7 @@ export default function ImagePicker(props){
                             key={item.id}
                         >
                             <Checkbox className="checkbox" checked={item.checked==1?true:false} onChange={(e)=>{onChange(e,item)}} />
-                                <img src={item.url}   width={50} height={50} onClick={(e)=>{imgClick(e,item)}}   />
+                                <img src={item.url}   width={150} height={150} onClick={(e)=>{imgClick(e,item)}}   />
                         </List.Item>
                     )}
                 />
