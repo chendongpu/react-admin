@@ -1,6 +1,6 @@
 import  React,{Component} from 'react';
-import {Button,List} from "antd";
 import ImagePicker from "../../components/goods/image-picker";
+import PicturesWall from "../../components/goods/pictures-wall";
 
 export default class ProductEdit extends Component {
     state={
@@ -13,29 +13,33 @@ export default class ProductEdit extends Component {
         console.log("show img");
     };
 
-
+    //获取images中uid乘以-1后的最大值
+    maxUid=(images)=>{
+        let tmp=images.map((e)=>{
+            return parseInt(e.uid)*-1;
+        });
+        let max=0;
+        tmp.filter((t)=>{
+            if(t>max){
+               max = t
+            }
+        });
+        return max;
+    };
 
 
     render() {
-        const {modalVisible,images}=this.state;
+        const {modalVisible,images,fl}=this.state;
         console.log("images",images);
         return (
             <div>
-                <Button onClick={()=>{this.showImage()}}>选择图片</Button>
 
-                <List
-                    dataSource={images}
 
-                    renderItem={item => (
-                        <List.Item>
+                <PicturesWall  fl={images} selectImage={()=>{this.showImage()}} setImages={(tmp)=>{
+                    this.setState({images:tmp});
+                }}/>
 
-                            <img src={item} style={{width:'50px',height:'50px'}} />
-
-                        </List.Item>
-                    )}
-                />
-
-                <ImagePicker visible={modalVisible} closeHandler={()=>{this.setState({modalVisible:false});}}   setImages={(imgs)=>{
+                <ImagePicker visible={modalVisible} max={this.maxUid(images)} closeHandler={()=>{this.setState({modalVisible:false});}}   setImages={(imgs)=>{
                     let tmp =[];
                     images.map((a)=>{
                         tmp.push(a);

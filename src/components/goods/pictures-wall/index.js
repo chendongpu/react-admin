@@ -1,86 +1,71 @@
-import React,{Component} from 'react'
-import { Upload, Image,Modal } from 'antd';
+import React, {useEffect, useState} from 'react'
+import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import './index.css'
 
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
 
-export  default class PicturesWall extends Component {
-    state = {
-        previewVisible: false,
-        previewImage: '',
-        previewTitle: '',
-        fileList: [
-            {
-                uid: '-1',
-                name: 'image.png',
-                status: 'done',
-                url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            },
-            {
-                uid: '-2',
-                name: 'image.png',
-                status: 'done',
-                url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            },
-            {
-                uid: '-3',
-                name: 'image.png',
-                status: 'done',
-                url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            },
-            {
-                uid: '-4',
-                name: 'image.png',
-                status: 'done',
-                url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            }
-        ],
-    };
 
-    handleCancel = () => this.setState({ previewVisible: false });
+export  default function PicturesWall(props){
 
-    handlePreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
+    const {fl,selectImage,setImages}=props;
+    const [previewVisible,setPreviewVisible]=useState(false);
+    const [previewImage,setPreviewImage]=useState("");
+    const [previewTitle,setPreviewTitle]=useState("");
 
-        this.setState({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
-            previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
+
+    const handleCancel = () => {setPreviewVisible(false)};
+
+    const  getBase64=(file)=>{
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
         });
     };
 
-    handleChange = ({ fileList }) => this.setState({ fileList });
+    const handlePreview = async file => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj);
+        }
+        setPreviewImage(file.url || file.preview);
+        setPreviewVisible(true);
+        setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+    };
 
-    render() {
-        const { previewVisible, previewImage, fileList, previewTitle } = this.state;
+    const handleRemove = async file => {
+        let tmp=fl.filter((f)=>{
+            if(f.uid!==file.uid){
+                return f;
+            }
+        });
+        setImages(tmp)
+
+    };
+
+
+
+    useEffect(()=>{
+    },[previewVisible]);
+
         const uploadButton = (
-            <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>上传</div>
+            <div className="selectImage"  onClick={()=>{
+               selectImage();
+            }}>
+                <div style={{marginLeft:'auto',marginRight:'auto'}}>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>上传</div>
+                </div>
             </div>
         );
         return (
-            <>
+            <div>
                 <Upload
-                   // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                     listType="picture-card"
-                    fileList={fileList}
-                    onPreview={this.handlePreview}
-                    onChange={this.handleChange}
-
-                    onClick={()=>{
-                        console.log("点击了上传按钮")
-                    }}
-                    // openFileDialogOnClick={false}
+                    fileList={fl}
+                    onPreview={handlePreview}
+                    onRemove={handleRemove}
+                    openFileDialogOnClick={false}
                 >
                     {uploadButton}
                 </Upload>
@@ -90,13 +75,11 @@ export  default class PicturesWall extends Component {
                     visible={previewVisible}
                     title={previewTitle}
                     footer={null}
-                    onCancel={this.handleCancel}
+                    onCancel={handleCancel}
                 >
                     <img alt="example" style={{ width: '100%' }} src={previewImage} />
                 </Modal>
-            </>
+            </div>
         );
-    }
+
 }
-//
-// ReactDOM.render(<PicturesWall />, mountNode);

@@ -8,7 +8,7 @@ import { reqimage,reqimageadd} from "../../../api";
 export default function ImagePicker(props){
 
 
-    const {visible,closeHandler,setImages}=props;
+    const {visible,closeHandler,setImages,max}=props;
 
     const [data,setData]=useState([]);
     const [total,setTotal]=useState(0);
@@ -38,7 +38,12 @@ export default function ImagePicker(props){
 
     const onOK=()=>{
         console.log("ok click");
-        setImages(imgs);
+        let index=0;
+        let tmp=imgs.map((img)=>{
+            index++;
+            return {url:img,status:'done',uid:-1*(max+index)};
+        });
+        setImages(tmp);
         closeHandler();
     };
 
