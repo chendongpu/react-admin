@@ -35,7 +35,16 @@ export default class ProductEdit extends Component {
                     )}
                 />
 
-                <ImagePicker visible={modalVisible} closeHandler={()=>{this.setState({modalVisible:false});}}   setImages={(images)=>this.setState({images})}></ImagePicker>
+                <ImagePicker visible={modalVisible} closeHandler={()=>{this.setState({modalVisible:false});}}   setImages={(imgs)=>{
+                    let tmp =[];
+                    images.map((a)=>{
+                        tmp.push(a);
+                    });
+                    imgs.map((a)=>{
+                        tmp.push(a);
+                    });
+                    this.setState({images:tmp});
+                }}></ImagePicker>
             </div>
         )
     }

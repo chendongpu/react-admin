@@ -1,7 +1,8 @@
 import React,{useEffect,useState} from 'react'
-import {Modal, List, Checkbox, message} from 'antd';
+import ReactFileReader from "react-file-reader";
+import {Modal, List, Checkbox, message,Button} from 'antd';
 import './index.css'
-import { reqimage} from "../../../api";
+import { reqimage,reqimageadd} from "../../../api";
 
 
 export default function ImagePicker(props){
@@ -12,6 +13,27 @@ export default function ImagePicker(props){
     const [data,setData]=useState([]);
     const [total,setTotal]=useState(0);
     const [imgs,setImgs]=useState([]);
+    const [loading,setLoading]=useState(false);
+
+
+    // 获取上传的图片的base64地址
+
+    const handleFiles =async (files) => {
+
+        console.log(files.base64);
+        const response = await reqimageadd({image:files.base64,is_save:1});
+        console.log("请求成功",response);
+        setLoading(true);
+        if(response.code===0){
+            console.log(response);
+            setLoading(false);
+            getImages(1,3);
+        }else{
+            console.log("请求失败",response.msg);
+        }
+
+
+    };
 
 
     const onOK=()=>{
@@ -64,6 +86,7 @@ export default function ImagePicker(props){
 
 
     useEffect(()=>{
+        setImgs([]);
        getImages(1,3);
     },[visible]);
 
@@ -77,6 +100,19 @@ export default function ImagePicker(props){
 
         <div>
             <Modal  forceRender title="Basic Modal"  visible={visible} onOk={onOK} onCancel={closeHandler}>
+
+
+
+                <ReactFileReader
+                    fileTypes={[".png",".jpg",".gif", "jpeg"]}
+                    base64
+                    multipleFiles={!1}
+                    handleFiles={handleFiles}>
+                    <Button loading={loading}>上传图片</Button>
+
+                </ReactFileReader>
+
+
 
                 <List
                     grid={{
@@ -104,7 +140,7 @@ export default function ImagePicker(props){
                             key={item.id}
                         >
                             <Checkbox className="checkbox" checked={item.checked==1?true:false} onChange={(e)=>{onChange(e,item)}} />
-                                <img src={item.url}   width={100} height={100} onClick={(e)=>{imgClick(e,item)}}   />
+                                <img src={item.url}   width={50} height={50} onClick={(e)=>{imgClick(e,item)}}   />
                         </List.Item>
                     )}
                 />

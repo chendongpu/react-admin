@@ -24,3 +24,5 @@ export const reqgoodsoffsale=(values)=>ajax('/admin/goods/offSale',values,'POST'
 export const reqgoodsonsale=(values)=>ajax('/admin/goods/onSale',values,'POST',headers);
 
 export const reqimage=(values)=>ajax('/admin/image/list',values,'GET',headers);
+
+export const reqimageadd=(values)=>ajax('/admin/image/add',values,'POST',headers);
