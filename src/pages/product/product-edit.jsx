@@ -71,6 +71,7 @@ export default class ProductEdit extends Component {
 
                 <Form
                     {...layout}
+                    style={{background:"#fff",paddingTop:"20px",paddingBottom:"20px"}}
                     name="basic"
                     initialValues={{}}
                     onFinish={onFinish}
@@ -78,6 +79,7 @@ export default class ProductEdit extends Component {
                 >
                     <Form.Item
                         label="商品图"
+                        required
                         name="pictures"
                         rules={[
                             {
