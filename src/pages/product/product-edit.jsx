@@ -1,12 +1,16 @@
 import  React,{Component} from 'react';
-import { Form, Input, Button } from 'antd';
+import {Form, Input, Button, message} from 'antd';
 import ImagePicker from "../../components/goods/image-picker";
 import PicturesWall from "../../components/goods/pictures-wall";
+import CategoryTag from "../../components/goods/category-tag";
+import {reqcategorys} from '../../api/index';
+import menuList from "../../config/menuConfig";
 
 export default class ProductEdit extends Component {
     state={
         modalVisible:false,
-        images:[]
+        images:[],
+        categorys:[]
     };
 
     showImage=()=>{
@@ -28,9 +32,26 @@ export default class ProductEdit extends Component {
         return max;
     };
 
+    getCategory=async ()=>{
+        const response = await reqcategorys();
+        console.log("请求成功",response);
+        if(response.code===0){
+            console.log(response);
+            this.setState({
+                categorys:response.result.list
+            });
+        }else{
+            message.error(response.msg);
+        }
+    };
+
+    componentWillMount(){
+        this.getCategory();
+    }
+
 
     render() {
-        const {modalVisible,images,fl}=this.state;
+        const {modalVisible,images,categorys}=this.state;
         console.log("images",images);
 
         const layout = {
@@ -103,6 +124,19 @@ export default class ProductEdit extends Component {
                         ]}
                     >
                         <Input style={{width: 500}} />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="商品分类"
+                        name="category"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请选择商品分类!',
+                            },
+                        ]}
+                    >
+                        <CategoryTag categorys={categorys} />
                     </Form.Item>
 
 
