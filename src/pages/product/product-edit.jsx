@@ -1,16 +1,19 @@
 import  React,{Component} from 'react';
-import {Form, Input, Button, message} from 'antd';
+import {Form, Input,InputNumber, Button, message} from 'antd';
 import ImagePicker from "../../components/goods/image-picker";
 import PicturesWall from "../../components/goods/pictures-wall";
 import CategoryTag from "../../components/goods/category-tag";
 import {reqcategorys} from '../../api/index';
-import menuList from "../../config/menuConfig";
+import GoodsSku from "../../components/goods/goods-sku";
 
 export default class ProductEdit extends Component {
     state={
         modalVisible:false,
         images:[],
-        categorys:[]
+        categorys:[],
+        specList:[],
+        skus:[],
+        multiSpec:false
     };
 
     showImage=()=>{
@@ -47,11 +50,180 @@ export default class ProductEdit extends Component {
 
     componentWillMount(){
         this.getCategory();
+
+        //分类列表
+        // this.setState({
+        //     specList:[
+        //         {
+        //             "id": 1,
+        //             "name": "分类一",
+        //             "value_list": [
+        //                 {
+        //                     "id": 1,
+        //                     "name": "1-a"
+        //                 },
+        //                 {
+        //                     "id": 2,
+        //                     "name": "1-b"
+        //                 },
+        //                 {
+        //                     "id": 3,
+        //                     "name": "1-c"
+        //                 }
+        //             ]
+        //         },
+        //         {
+        //             "id": 2,
+        //             "name": "分类2",
+        //             "value_list": [
+        //                 {
+        //                     "id": 5,
+        //                     "name": "2-b"
+        //                 },
+        //                 {
+        //                     "id": 4,
+        //                     "name": "2-a"
+        //                 }
+        //             ]
+        //         }
+        //     ]
+        // });
+
+        //sku列表
+        // this.setState({
+        //     skus:[
+        //         {
+        //             "price": 1,
+        //             "stock": 1,
+        //             "code": 1,
+        //             "spec": [
+        //                 {
+        //                     "id": 1,
+        //                     "name": "分类一",
+        //                     "value_id": 1,
+        //                     "value_name": "1-a"
+        //                 },
+        //                 {
+        //                     "id": 2,
+        //                     "name": "分类2",
+        //                     "value_id": 5,
+        //                     "value_name": "2-b"
+        //                 }
+        //             ],
+        //             "weight": null
+        //         },
+        //         {
+        //             "price": 2,
+        //             "stock": 2,
+        //             "code": 2,
+        //             "spec": [
+        //                 {
+        //                     "id": 1,
+        //                     "name": "分类一",
+        //                     "value_id": 2,
+        //                     "value_name": "1-b"
+        //                 },
+        //                 {
+        //                     "id": 2,
+        //                     "name": "分类2",
+        //                     "value_id": 5,
+        //                     "value_name": "2-b"
+        //                 }
+        //             ],
+        //             "weight": null
+        //         },
+        //         {
+        //             "price": 3,
+        //             "stock": 3,
+        //             "code": 3,
+        //             "spec": [
+        //                 {
+        //                     "id": 1,
+        //                     "name": "分类一",
+        //                     "value_id": 3,
+        //                     "value_name": "1-c"
+        //                 },
+        //                 {
+        //                     "id": 2,
+        //                     "name": "分类2",
+        //                     "value_id": 5,
+        //                     "value_name": "2-b"
+        //                 }
+        //             ],
+        //             "weight": null
+        //         },
+        //         {
+        //             "price": 4,
+        //             "stock": 4,
+        //             "code": 4,
+        //             "spec": [
+        //                 {
+        //                     "id": 1,
+        //                     "name": "分类一",
+        //                     "value_id": 1,
+        //                     "value_name": "1-a"
+        //                 },
+        //                 {
+        //                     "id": 2,
+        //                     "name": "分类2",
+        //                     "value_id": 4,
+        //                     "value_name": "2-a"
+        //                 }
+        //             ],
+        //             "weight": null
+        //         },
+        //         {
+        //             "price": 5,
+        //             "stock": 5,
+        //             "code": 5,
+        //             "spec": [
+        //                 {
+        //                     "id": 1,
+        //                     "name": "分类一",
+        //                     "value_id": 2,
+        //                     "value_name": "1-b"
+        //                 },
+        //                 {
+        //                     "id": 2,
+        //                     "name": "分类2",
+        //                     "value_id": 4,
+        //                     "value_name": "2-a"
+        //                 }
+        //             ],
+        //             "weight": null
+        //         },
+        //         {
+        //             "price": 6,
+        //             "stock": 6,
+        //             "code": 6,
+        //             "spec": [
+        //                 {
+        //                     "id": 1,
+        //                     "name": "分类一",
+        //                     "value_id": 3,
+        //                     "value_name": "1-c"
+        //                 },
+        //                 {
+        //                     "id": 2,
+        //                     "name": "分类2",
+        //                     "value_id": 4,
+        //                     "value_name": "2-a"
+        //                 }
+        //             ],
+        //             "weight": null
+        //         }
+        //     ]
+        // });
+
     }
+
+    onMultiSpecChange=(e) => {
+            this.setState({multiSpec: !!e.multi})
+    };
 
 
     render() {
-        const {modalVisible,images,categorys}=this.state;
+        const {modalVisible,images,categorys,specList,skus,multiSpec}=this.state;
         console.log("images",images);
 
         const layout = {
@@ -85,6 +257,10 @@ export default class ProductEdit extends Component {
 
             return Promise.reject(new Error('请选择商品图!'));
         };
+
+
+
+
 
         return (
 
@@ -138,6 +314,65 @@ export default class ProductEdit extends Component {
                     >
                         <CategoryTag categorys={categorys} />
                     </Form.Item>
+
+
+                    <Form.Item
+                        label="价格"
+                        name="price"
+                        rules={[
+                            {
+                                required: true,
+                                message: '',
+                            },
+                        ]}
+                    >
+                        <InputNumber min={0}  />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="库存"
+                        name="stock"
+                        rules={[
+                            {
+                                required: true,
+                                message: '',
+                            },
+                        ]}
+                    >
+                        <InputNumber min={0}  />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="商品编码"
+                        name="code"
+                        rules={[
+                            {
+                                required: true,
+                                message: '',
+                            },
+                        ]}
+                    >
+                        <Input style={{width: 500}} />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="商品规格"
+                        name="sku"
+                    >
+                        <GoodsSku   skus={skus}
+                                    specList={specList}
+                                    onChange={(skus) => {
+                                        this.setSkus(skus)
+                                    }}
+                                    reset={() => {
+                                        this.setSkus([])
+                                    }}
+                                    onMultiSpecChange={(e)=>{this.onMultiSpecChange(e)}}/>
+                    </Form.Item>
+
+
+
+
 
 
 
