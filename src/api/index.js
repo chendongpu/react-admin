@@ -26,3 +26,11 @@ export const reqgoodsonsale=(values)=>ajax('/admin/goods/onSale',values,'POST',h
 export const reqimage=(values)=>ajax('/admin/image/list',values,'GET',headers);
 
 export const reqimageadd=(values)=>ajax('/admin/image/add',values,'POST',headers);
+
+export const reqgoodsspec=(values)=>ajax('/admin/goodsspec/list',values,'GET',headers);
+
+export const reqgoodsspecadd=(values)=>ajax('/admin/goodsspec/add',values,'POST',headers);
+
+export const reqgoodsspecvalueadd=(values)=>ajax('/admin/Goodsspecvalue/add',values,'POST',headers);
+
+export const reqgoodsspecvaluedel=(values)=>ajax('/admin/Goodsspecvalue/del',values,'POST',headers);

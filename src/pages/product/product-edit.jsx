@@ -3,7 +3,7 @@ import {Form, Input,InputNumber, Button, message} from 'antd';
 import ImagePicker from "../../components/goods/image-picker";
 import PicturesWall from "../../components/goods/pictures-wall";
 import CategoryTag from "../../components/goods/category-tag";
-import {reqcategorys} from '../../api/index';
+import {reqcategorys,reqgoodsspec} from '../../api/index';
 import GoodsSku from "../../components/goods/goods-sku";
 
 export default class ProductEdit extends Component {
@@ -48,46 +48,33 @@ export default class ProductEdit extends Component {
         }
     };
 
+    getGoodsSpec=async ()=>{
+        const response = await reqgoodsspec({});
+        console.log("请求成功",response);
+        if(response.code===0){
+            console.log(response);
+            this.setState({
+                specList:response.result.list
+            });
+        }else{
+            message.error(response.msg);
+        }
+    };
+
+    setSkus=(skus)=>{
+        this.setState({
+            skus
+        });
+    }
+
     componentWillMount(){
         this.getCategory();
-
         //分类列表
-        // this.setState({
-        //     specList:[
-        //         {
-        //             "id": 1,
-        //             "name": "分类一",
-        //             "value_list": [
-        //                 {
-        //                     "id": 1,
-        //                     "name": "1-a"
-        //                 },
-        //                 {
-        //                     "id": 2,
-        //                     "name": "1-b"
-        //                 },
-        //                 {
-        //                     "id": 3,
-        //                     "name": "1-c"
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             "id": 2,
-        //             "name": "分类2",
-        //             "value_list": [
-        //                 {
-        //                     "id": 5,
-        //                     "name": "2-b"
-        //                 },
-        //                 {
-        //                     "id": 4,
-        //                     "name": "2-a"
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // });
+        this.getGoodsSpec();
+
+        this.setState({
+            skus:[]
+        });
 
         //sku列表
         // this.setState({
