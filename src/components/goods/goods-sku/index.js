@@ -1,5 +1,5 @@
 import  React,{Component}  from 'react';
-import styles from './spec.css'
+import  './spec.css'
 import { Modal, Input, Select, Button, Tag, Popover, Checkbox, message } from "antd";
 import {reqgoodsspec, reqgoodsspecadd,reqgoodsspecvalueadd,reqgoodsspecvaluedel} from "../../../api";
 const confirm = Modal.confirm;
@@ -16,15 +16,14 @@ export default class GoodsSku extends Component{
         lastSpecValuesPopoverClick:{index:0,visible:false}
     };
 
-
-
     render(){
-        const {skus,specList,reset,onChange,onMultiSpecChange}=this.props;
+        const {skus,setSkus,specList,reset,onChange,onMultiSpecChange}=this.props;
         const {specRowRightCloseBtnHoverIndex,specs,lastSpecValuesPopoverClick}=this.state;
         //过滤掉空的sku
+        console.log("skus:",skus);
         let _skus=skus.filter((sku)=>{
             return sku.spec.length>0 && sku.spec[0]["id"]!=="undefined" &&  sku.spec[0].id>0
-        })
+        });
         console.log("specs",specs);
         return (
           specs.length === 0 ?
@@ -36,16 +35,16 @@ export default class GoodsSku extends Component{
                         }]
                     })
                 }}>添加型号分类</Button>:
-              <div className={styles.spec}>
-                  <div className={styles.itemWarp}>
+              <div className="spec view">
+                  <div className="itemWarp view">
                       {
                           specs.length>0 && specs.map((spec,index)=>(
-                              <div key={spec.id} className={styles.item} onMouseEnter={()=>{
+                              <div key={spec.id} className="item" onMouseEnter={()=>{
                                   this.setState({ specRowRightCloseBtnHoverIndex: index })
                               }} onMouseLeave={()=>{
                                   this.setState({ specRowRightCloseBtnHoverIndex: -1 })
                               }}>
-                                  <div className={styles.itemTop}>
+                                  <div className="itemTop view">
                                       <Select
                                           placeholder="请选择型号分类"
                                           value={spec.id>0?`${spec.id}`:[] }
@@ -73,17 +72,25 @@ export default class GoodsSku extends Component{
                                                       cancelText:'取消',
                                                       onOk:()=>{
                                                        let _specs=[...specs];
+                                                       console.log("11111_specs",_specs);
                                                        _specs.splice(index,1);
+                                                       console.log("22222_specs",_specs);
                                                        const data=this.mergeSkus(_specs);
+                                                          console.log("111_data",data);
                                                        this.setState({
                                                            specs:_specs
                                                        },()=>{
                                                            onChange();
+                                                           console.log("333_specs",_specs);
                                                            if(_specs.length===0){
+                                                               console.log("加加加");
                                                                onMultiSpecChange({multi: false})
+                                                               setSkus(skus);
+
                                                            }
 
                                                            if(data.length === 0){
+                                                               console.log("走走走");
                                                                reset()
                                                            }
                                                        })
@@ -95,9 +102,9 @@ export default class GoodsSku extends Component{
                                       }
                                   </div>
 
-                                  <div className={styles.tagsWarp}>
+                                  <div className="tagsWarp view">
                                       {
-                                          spec.values.map((value)=>{
+                                          spec.values.map((value)=>(
                                               <Tag
                                                   key={`spec_${spec.id}_value_${value.id}`}
                                                   closable
@@ -111,7 +118,7 @@ export default class GoodsSku extends Component{
                                               >
                                                   {value.name}
                                               </Tag>
-                                          })
+                                          ))
                                       }
                                       {
                                           spec.id>0?
@@ -138,7 +145,7 @@ export default class GoodsSku extends Component{
                       }
                   </div>
                   {skus.length>0?
-                    <div className={styles.buttonWarp}>
+                    <div className="buttonWarp">
                         {this.addSpecItemButton()}
                     </div>:this.addSpecItemButton()
                   }
@@ -203,18 +210,18 @@ export default class GoodsSku extends Component{
         })
         const useModelDataValue=useModelData.values.filter((e)=>!cv.includes(e.id));
         return (
-            <div className={styles.valuesPopoverWarp}>
-                {useModelDataValue.length>0?<div className={styles.valuesPopoverTop}>
+            <div className="valuesPopoverWarp view">
+                {useModelDataValue.length>0?<div className="valuesPopoverTop view">
                         {
-                            useModelDataValue.map((tagsItem)=>{
+                            useModelDataValue.map((tagsItem)=>(
                                 <div
                                     key={tagsItem.id}
-                                    className={styles.valuesPopoverTopItem}>
+                                    className="valuesPopoverTopItem view">
                                     <Checkbox
                                         checked={specValueIds.includes(tagsItem.id)}
                                         onChange={(e)=>{
                                             if(e.target.checked){
-                                                this.state({specValueIds:[...specValueIds,tagsItem.id]})
+                                                this.setState({specValueIds:[...specValueIds,tagsItem.id]})
                                             }else {
                                                 const _specValueIds=[...specValueIds];
                                                 const _index=_specValueIds.findIndex((id)=>id===tagsItem.id)
@@ -243,13 +250,13 @@ export default class GoodsSku extends Component{
                                         </Tag>
                                     </Checkbox>
                                 </div>
-                            })
+                            ))
                         }
                     </div>:null }
-                <div className={styles.valuesPopoverMid}>
+                <div className="valuesPopoverMid">
                     {
                         addSpecComVisible?
-                            <div className={styles.valuesPopoverMid} style={{padding:'0'}}>
+                            <div className="valuesPopoverMid" style={{padding:'0'}}>
                                 <Input style={{width:'50%'}} placeholder="输入型号" ref={(e)=>{
                                     if(e){
                                     this.AddSpecInput=e;
@@ -270,7 +277,7 @@ export default class GoodsSku extends Component{
                     }
                 </div>
 
-                <div className={styles.valuesPopoverBot}>
+                <div className="valuesPopoverBot">
                     <Button
                         onClick={()=>{this.setState({lastSpecValuesPopoverClick:{index,visible: false}})}}
                     >取消</Button>
@@ -280,7 +287,7 @@ export default class GoodsSku extends Component{
                             const _specs=[...specs];
                             const specIndex=specList.findIndex((spec)=>spec.id===activeItem.id);
                             let specValues=[];
-                            for(let i=0;i<specValues.length;i++){
+                            for(let i=0;i<specValueIds.length;i++){
                                 let findSpecValue=specList[specIndex].values.find((value)=>value.id===specValueIds[i]);
                                 if(findSpecValue){
                                     specValues.push({
@@ -289,7 +296,7 @@ export default class GoodsSku extends Component{
                                     })
                                 }
                             }
-                            _specs[index].value=[...specValues,..._specs[index].values];
+                            _specs[index].values=[...specValues,..._specs[index].values];
                             const data=this.mergeSkus(_specs);
                             this.setState({specValueIds:[]},()=>{onChange(data)});
 
@@ -305,6 +312,7 @@ export default class GoodsSku extends Component{
 
     //添加
     addSpecValue=async({id,name})=>{
+        const {setSpecList}=this.props;
         const response = await reqgoodsspecvalueadd({spec_id:id,name:name});
         if(response.code===0) {
             console.log("请求成功", response);
@@ -312,7 +320,7 @@ export default class GoodsSku extends Component{
 
             const res = await reqgoodsspec({});
             if(res.code===0){
-                this.resetSpecs(res.result.list);
+                setSpecList(res.result.list);
                 this.setState({ addSpecComVisible: false })
             }else{
                 message.error(res.msg);
@@ -325,6 +333,7 @@ export default class GoodsSku extends Component{
 
 
     delSpecValue=async({id})=>{
+        const {setSpecList}=this.props;
         const response = await reqgoodsspecvaluedel({id:id});
         if(response.code===0) {
             console.log("请求成功", response);
@@ -332,7 +341,7 @@ export default class GoodsSku extends Component{
 
             const res = await reqgoodsspec({});
             if(res.code===0){
-                this.resetSpecs(res.result.list);
+                setSpecList(res.result.list);
             }else{
                 message.error(res.msg);
             }
@@ -391,39 +400,10 @@ export default class GoodsSku extends Component{
     }
 
 
-    // 通过skus重组specs，必须存在spec 否则第一条无法被添加
-    resetSpecs=(skus)=>{
-        if (skus.length > 0 && skus[0].spec.length > 0 && skus[0].spec[0]['id'] > 0) {
-            const specs = [];
-            skus.map((e) => {
-                e.spec.map((skuSpec) => {
-                    const findInSpecsIndex = specs.findIndex((spec) => spec.id === skuSpec.id);
-                    // 预置spec
-                    if (findInSpecsIndex === -1) {
-                        // 如果state里没有 添加外部传入的specs
-                        specs.push({
-                            id: skuSpec.id,
-                            name: skuSpec.name,
-                            values: []
-                        })
-                    }
-                    // 设置value
-                    const specIndex = specs.findIndex((spec) => spec.id === skuSpec.id);
-                    const specValueIndex = specs[specIndex].values.findIndex((value) => value.id === skuSpec.value_id);
-                    if (specValueIndex === -1) {
-                        specs[specIndex].values.push({
-                            id: skuSpec.value_id,
-                            name: skuSpec.value_name,
-                        })
-                    }
-                })
-            });
-            this.setState({ specs })
-        }
-    }
 
 
     customSpecModalOk=async()=>{
+        const {setSpecList}=this.props;
         const response = await reqgoodsspecadd({name:this.AddSpecValueInput.input.value});
 
         if(response.code===0){
@@ -432,7 +412,7 @@ export default class GoodsSku extends Component{
 
             const res = await reqgoodsspec({});
             if(res.code===0){
-                this.resetSpecs(res.result.list);
+                setSpecList(res.result.list);
             }else{
                 message.error(res.msg);
             }
@@ -443,10 +423,11 @@ export default class GoodsSku extends Component{
     };
 
     customSpecModalCancel=()=>{
-        this.setState({customSpecStortShow:false});
+        this.setState({customSpecSortShow:false});
     };
 
     mergeSkus = (specs)=>{
+        console.log("aaa--specs",specs);
         const _spec=specs.filter((e)=>{
             return e.values.length !== 0
         });

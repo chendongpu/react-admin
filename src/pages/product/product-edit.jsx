@@ -12,7 +12,23 @@ export default class ProductEdit extends Component {
         images:[],
         categorys:[],
         specList:[],
-        skus:[],
+        skus: [
+            {
+                spec: [
+                    {
+                        id: 0,
+                        name: null,
+                        value_id: 0,
+                        value_name: null,
+                        value_img: null
+                    }
+                ],
+                price: null,
+                stock: null,
+                code: null,
+                weight: null
+            }
+        ],
         multiSpec:false
     };
 
@@ -67,14 +83,10 @@ export default class ProductEdit extends Component {
         });
     }
 
-    componentWillMount(){
+    componentDidMount(){
         this.getCategory();
         //分类列表
         this.getGoodsSpec();
-
-        this.setState({
-            skus:[]
-        });
 
         //sku列表
         // this.setState({
@@ -212,6 +224,7 @@ export default class ProductEdit extends Component {
     render() {
         const {modalVisible,images,categorys,specList,skus,multiSpec}=this.state;
         console.log("images",images);
+        console.log("skus",skus);
 
         const layout = {
             labelCol: {
@@ -348,10 +361,15 @@ export default class ProductEdit extends Component {
                     >
                         <GoodsSku   skus={skus}
                                     specList={specList}
+                                    setSpecList={(specList)=>{this.setState({specList:specList})}}
+                                    setSkus={(skus_)=>{
+                                        this.setSkus(skus_)
+                                    }}
                                     onChange={(skus) => {
                                         this.setSkus(skus)
                                     }}
                                     reset={() => {
+                                        console.log("======reset被调用=======")
                                         this.setSkus([])
                                     }}
                                     onMultiSpecChange={(e)=>{this.onMultiSpecChange(e)}}/>
