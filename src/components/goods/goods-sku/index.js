@@ -1,5 +1,6 @@
 import  React,{Component}  from 'react';
 import  './spec.css'
+import Sku from "./sku";
 import { Modal, Input, Select, Button, Tag, Popover, Checkbox, message } from "antd";
 import { PlusOutlined,CloseCircleOutlined } from '@ant-design/icons';
 import {reqgoodsspec, reqgoodsspecadd,reqgoodsspecvalueadd,reqgoodsspecvaluedel} from "../../../api";
@@ -139,6 +140,7 @@ export default class GoodsSku extends Component{
                         {this.addSpecItemButton()}
                     </div>:this.addSpecItemButton()
                   }
+                  {skus.length > 0 && <Sku skus={_skus} specs={specs} onChange={onChange} />}
                   {this.customSpecModal()}
               </div>
         );
