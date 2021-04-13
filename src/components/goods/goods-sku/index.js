@@ -12,14 +12,13 @@ export default class GoodsSku extends Component{
         customSpecSortShow: false,
         specValueIds:[],
         addSpecComVisible:false,
-        specRowRightCloseBtnHoverIndex:-1,
         specs:[],
         lastSpecValuesPopoverClick:{index:0,visible:false}
     };
 
     render(){
         const {skus,setSkus,specList,reset,onChange,onMultiSpecChange}=this.props;
-        const {specRowRightCloseBtnHoverIndex,specs,lastSpecValuesPopoverClick}=this.state;
+        const {specs,lastSpecValuesPopoverClick}=this.state;
 
         //过滤掉空的sku
         let _skus=skus.filter((sku)=>{
@@ -40,11 +39,7 @@ export default class GoodsSku extends Component{
                   <div className="itemWarp view">
                       {
                           specs.length>0 && specs.map((spec,index)=>(
-                              <div key={spec.id} className="item" onMouseEnter={()=>{
-                                  this.setState({ specRowRightCloseBtnHoverIndex: index })
-                              }} onMouseLeave={()=>{
-                                  this.setState({ specRowRightCloseBtnHoverIndex: -1 })
-                              }}>
+                              <div key={spec.id} className="item">
                                   <div className="itemTop view">
                                       <Select
                                           placeholder="请选择型号分类"
@@ -64,8 +59,7 @@ export default class GoodsSku extends Component{
                                           <Option key={'customSpecShow'}>自定义</Option>
                                       </Select>
 
-                                      {
-                                          specRowRightCloseBtnHoverIndex===index?
+
                                               <div onClick={()=>{
                                                   confirm({
                                                       title:'确定要删除吗',
@@ -94,8 +88,8 @@ export default class GoodsSku extends Component{
                                                   })
                                               }}>
                                                   <CloseCircleOutlined style={{fontSize: '16px'}}/>
-                                              </div>:null
-                                      }
+                                              </div>
+
                                   </div>
 
                                   <div className="tagsWarp view">
