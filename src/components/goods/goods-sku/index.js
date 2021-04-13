@@ -85,9 +85,10 @@ export default class GoodsSku extends Component{
                                                            if(_specs.length===0){
                                                                console.log("加加加");
                                                                onMultiSpecChange({multi: false})
-                                                               setSkus(skus);
+
 
                                                            }
+                                                           setSkus(data);
 
                                                            if(data.length === 0){
                                                                console.log("走走走");
