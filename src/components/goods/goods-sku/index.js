@@ -1,6 +1,7 @@
 import  React,{Component}  from 'react';
 import  './spec.css'
 import { Modal, Input, Select, Button, Tag, Popover, Checkbox, message } from "antd";
+import { PlusOutlined,CloseCircleOutlined } from '@ant-design/icons';
 import {reqgoodsspec, reqgoodsspecadd,reqgoodsspecvalueadd,reqgoodsspecvaluedel} from "../../../api";
 const confirm = Modal.confirm;
 const Option = Select.Option;
@@ -19,12 +20,12 @@ export default class GoodsSku extends Component{
     render(){
         const {skus,setSkus,specList,reset,onChange,onMultiSpecChange}=this.props;
         const {specRowRightCloseBtnHoverIndex,specs,lastSpecValuesPopoverClick}=this.state;
+
         //过滤掉空的sku
-        console.log("skus:",skus);
         let _skus=skus.filter((sku)=>{
             return sku.spec.length>0 && sku.spec[0]["id"]!=="undefined" &&  sku.spec[0].id>0
         });
-        console.log("specs",specs);
+
         return (
           specs.length === 0 ?
                 <Button type="dashed" onClick={()=>{
@@ -34,7 +35,7 @@ export default class GoodsSku extends Component{
                             id:0,name:'',values:[]
                         }]
                     })
-                }}>添加型号分类</Button>:
+                }}> <PlusOutlined /> 添加型号分类</Button>:
               <div className="spec view">
                   <div className="itemWarp view">
                       {
@@ -48,6 +49,7 @@ export default class GoodsSku extends Component{
                                       <Select
                                           placeholder="请选择型号分类"
                                           value={spec.id>0?`${spec.id}`:[] }
+                                          style={{ width: '30%', top: '0' }}
                                             onChange={(specId)=>{
                                                 if(specId === 'customSpecShow'){
                                                     this.customSpecShow();
@@ -72,33 +74,26 @@ export default class GoodsSku extends Component{
                                                       cancelText:'取消',
                                                       onOk:()=>{
                                                        let _specs=[...specs];
-                                                       console.log("11111_specs",_specs);
                                                        _specs.splice(index,1);
-                                                       console.log("22222_specs",_specs);
                                                        const data=this.mergeSkus(_specs);
-                                                          console.log("111_data",data);
                                                        this.setState({
                                                            specs:_specs
                                                        },()=>{
                                                            onChange();
-                                                           console.log("333_specs",_specs);
                                                            if(_specs.length===0){
-                                                               console.log("加加加");
                                                                onMultiSpecChange({multi: false})
-
 
                                                            }
                                                            setSkus(data);
 
                                                            if(data.length === 0){
-                                                               console.log("走走走");
                                                                reset()
                                                            }
                                                        })
                                                       }
                                                   })
                                               }}>
-                                                  删除
+                                                  <CloseCircleOutlined style={{fontSize: '16px'}}/>
                                               </div>:null
                                       }
                                   </div>
@@ -129,7 +124,7 @@ export default class GoodsSku extends Component{
                                                   placement="bottomLeft"
                                                   visible={index === lastSpecValuesPopoverClick.index?lastSpecValuesPopoverClick.visible:false}
                                               >
-                                                  <a style={{color:'#00f'}} onClick={()=>{
+                                                  <a style={{color:'#188fff'}} onClick={()=>{
                                                       this.setState({
                                                           lastSpecValuesPopoverClick:{
                                                               index,visiable:true
@@ -272,9 +267,9 @@ export default class GoodsSku extends Component{
                                     message.warning("请输入型号");
                                 }
                                 }}>添加</Button>
-                                <Button size={'small'} onClick={()=>{this.setState({addSpecComVisible:false})}} ></Button>
+                                <Button size={'small'} onClick={()=>{this.setState({addSpecComVisible:false})}} >取消</Button>
                             </div>:
-                            <a style={{color:'#00f'}} onClick={()=>{this.setState({addSpecComVisible:true})}}>添加型号</a>
+                            <a style={{color:'#188fff'}} onClick={()=>{this.setState({addSpecComVisible:true})}}>添加型号</a>
                     }
                 </div>
 
@@ -316,8 +311,6 @@ export default class GoodsSku extends Component{
         const {setSpecList}=this.props;
         const response = await reqgoodsspecvalueadd({spec_id:id,name:name});
         if(response.code===0) {
-            console.log("请求成功", response);
-            console.log(response);
 
             const res = await reqgoodsspec({});
             if(res.code===0){
@@ -337,8 +330,6 @@ export default class GoodsSku extends Component{
         const {setSpecList}=this.props;
         const response = await reqgoodsspecvaluedel({id:id});
         if(response.code===0) {
-            console.log("请求成功", response);
-            console.log(response);
 
             const res = await reqgoodsspec({});
             if(res.code===0){
@@ -375,7 +366,7 @@ export default class GoodsSku extends Component{
                 }}
                 style={{width:'150px',marginTop:'15px'}}
             >
-                +添加型号分类
+                <PlusOutlined/> 添加型号分类
             </Button>
         );
     }
@@ -408,9 +399,6 @@ export default class GoodsSku extends Component{
         const response = await reqgoodsspecadd({name:this.AddSpecValueInput.input.value});
 
         if(response.code===0){
-            console.log("请求成功",response);
-            console.log(response);
-
             const res = await reqgoodsspec({});
             if(res.code===0){
                 setSpecList(res.result.list);
@@ -428,7 +416,6 @@ export default class GoodsSku extends Component{
     };
 
     mergeSkus = (specs)=>{
-        console.log("aaa--specs",specs);
         const _spec=specs.filter((e)=>{
             return e.values.length !== 0
         });
