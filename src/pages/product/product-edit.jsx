@@ -316,64 +316,24 @@ export default class ProductEdit extends Component {
                     </Form.Item>
 
 
-                    <Form.Item
-                        label="价格"
-                        name="price"
-                        rules={[
-                            {
-                                required: true,
-                                message: '',
-                            },
-                        ]}
-                    >
-                        <InputNumber min={0}  />
-                    </Form.Item>
 
-                    <Form.Item
-                        label="库存"
-                        name="stock"
-                        rules={[
-                            {
-                                required: true,
-                                message: '',
-                            },
-                        ]}
-                    >
-                        <InputNumber min={0}  />
-                    </Form.Item>
+                    <GoodsSku
+                                layout={layout}
+                                skus={skus}
+                                specList={specList}
+                                setSpecList={(specList)=>{this.setState({specList:specList})}}
+                                setSkus={(skus_)=>{
+                                    this.setSkus(skus_)
+                                }}
+                                onChange={(skus) => {
+                                    this.setSkus(skus)
+                                }}
+                                reset={() => {
+                                    console.log("======reset被调用=======")
+                                    this.setSkus([])
+                                }}
+                                onMultiSpecChange={(e)=>{this.onMultiSpecChange(e)}}/>
 
-                    <Form.Item
-                        label="商品编码"
-                        name="code"
-                        rules={[
-                            {
-                                required: true,
-                                message: '',
-                            },
-                        ]}
-                    >
-                        <Input style={{width: 500}} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="商品规格"
-                        name="sku"
-                    >
-                        <GoodsSku   skus={skus}
-                                    specList={specList}
-                                    setSpecList={(specList)=>{this.setState({specList:specList})}}
-                                    setSkus={(skus_)=>{
-                                        this.setSkus(skus_)
-                                    }}
-                                    onChange={(skus) => {
-                                        this.setSkus(skus)
-                                    }}
-                                    reset={() => {
-                                        console.log("======reset被调用=======")
-                                        this.setSkus([])
-                                    }}
-                                    onMultiSpecChange={(e)=>{this.onMultiSpecChange(e)}}/>
-                    </Form.Item>
 
 
 

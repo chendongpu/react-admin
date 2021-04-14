@@ -1,11 +1,12 @@
 import  React,{Component}  from 'react';
 import  './spec.css'
 import Sku from "./sku";
-import { Modal, Input, Select, Button, Tag, Popover, Checkbox, message } from "antd";
+import {Modal, Select, Button, Tag, Popover, Checkbox, message, Form,Input,InputNumber} from "antd";
 import { PlusOutlined,CloseCircleOutlined } from '@ant-design/icons';
 import {reqgoodsspec, reqgoodsspecadd,reqgoodsspecvalueadd,reqgoodsspecvaluedel} from "../../../api";
 const confirm = Modal.confirm;
 const Option = Select.Option;
+const FormItem = Form.Item;
 
 export default class GoodsSku extends Component{
 
@@ -18,7 +19,7 @@ export default class GoodsSku extends Component{
     };
 
     render(){
-        const {skus,setSkus,specList,reset,onChange,onMultiSpecChange}=this.props;
+        const {layout,skus,setSkus,specList,reset,onChange,onMultiSpecChange}=this.props;
         const {specs,lastSpecValuesPopoverClick}=this.state;
 
         //过滤掉空的sku
@@ -28,6 +29,67 @@ export default class GoodsSku extends Component{
 
         return (
           specs.length === 0 ?
+              <div>
+                  <FormItem
+                      {...layout}
+                      label='商品价格'
+                      required={true}
+                  >
+                      <InputNumber
+                          style={{
+                              width: 150
+                          }}
+                          precision={2}
+                          formatter={value => `${value}`}
+                          min={0}
+                          value={skus[0].price}
+                          onChange={(e) => {
+                              setSkus([{
+                                  ...skus[0],
+                                  price: e
+                              }])
+                          }}
+                      /> 元
+                  </FormItem>
+                  <FormItem
+                      {...layout}
+                      label='库存'
+                      required={true}
+                  >
+                      <InputNumber
+                          style={{ width: 150 }}
+                          precision={0}
+                          formatter={value => `${value}`}
+                          min={0}
+                          value={skus[0].stock}
+                          onChange={(e) => {
+                              setSkus([{
+                                  ...skus[0],
+                                  stock: e
+                              }])
+                          }}
+                      /> 件
+                  </FormItem>
+                  <FormItem
+                      {...layout}
+                      label='商品编码'
+                  >
+                      <Input
+                          style={{ width: 440 }}
+                          placeholder="选填，用于商家系统对接"
+                          value={skus[0].code}
+                          onChange={(e) => {
+                              setSkus([{
+                                  ...skus[0],
+                                  code: e.target.value
+                              }])
+                          }}
+                      />
+                  </FormItem>
+                  <FormItem
+                      {...layout}
+                      label='商品型号'
+                  >
                 <Button type="dashed" onClick={()=>{
                     this.props.onMultiSpecChange({multi:true});
                     this.setState({
@@ -35,7 +97,11 @@ export default class GoodsSku extends Component{
                             id:0,name:'',values:[]
                         }]
                     })
-                }}> <PlusOutlined /> 添加型号分类</Button>:
+                }}> <PlusOutlined /> 添加型号分类</Button></FormItem></div>:
+              <FormItem
+                  {...layout}
+                  label='商品型号'
+              >
               <div className="spec view">
                   <div className="itemWarp view">
                       {
@@ -143,6 +209,7 @@ export default class GoodsSku extends Component{
                   {skus.length > 0 && <Sku skus={_skus} specs={specs} onChange={onChange} />}
                   {this.customSpecModal()}
               </div>
+              </FormItem>
         );
     }
 
