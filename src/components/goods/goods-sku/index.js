@@ -27,9 +27,47 @@ export default class GoodsSku extends Component{
             return sku.spec.length>0 && sku.spec[0]["id"]!=="undefined" &&  sku.spec[0].id>0
         });
 
+        const checkSkus =(_, value)=>{
+            // 单产品验证
+            if (Array.isArray(skus) && skus.length === 1 && skus[0]['spec']!=="undefined" && skus[0].spec.length === 1 && skus[0].spec[0].id === 0) {
+                if (!skus[0].price) {
+                    return Promise.reject(new Error('请输入商品价格'))
+                } else if (!skus[0].stock) {
+                    return Promise.reject(new Error('请输入商品库存'))
+                } else {
+                    return Promise.resolve();
+                }
+            } else {
+                // 多产品验证
+                if( Array.isArray(skus)){
+                    const index = skus.findIndex((e) => {
+                        return !e.price || !e.stock
+                    })
+                    if (index === -1) {
+                        return Promise.resolve();
+                    }else{
+                        return Promise.reject(new Error('请完善商品型号价格信息'))
+                    }
+                }else{
+                    return Promise.reject(new Error('请完善商品型号价格信息'))
+                }
+
+            }
+
+        }
+
         return (
           specs.length === 0 ?
-              <div>
+              <div className="specialExplainWarp">
+
+                  <Form.Item
+                      name="skus"
+                      rules={[
+                          {
+                              validator: checkSkus
+                          },
+                      ]}
+                  >
                   <FormItem
                       {...layout}
                       label='商品价格'
@@ -97,7 +135,17 @@ export default class GoodsSku extends Component{
                             id:0,name:'',values:[]
                         }]
                     })
-                }}> <PlusOutlined /> 添加型号分类</Button></FormItem></div>:
+                }}> <PlusOutlined /> 添加型号分类</Button></FormItem></Form.Item></div>:
+
+              <div className="specialExplainWarp">
+              <Form.Item
+                  name="skus"
+                  rules={[
+                      {
+                          validator: checkSkus
+                      },
+                  ]}
+              >
               <FormItem
                   {...layout}
                   label='商品型号'
@@ -210,6 +258,8 @@ export default class GoodsSku extends Component{
                   {this.customSpecModal()}
               </div>
               </FormItem>
+              </Form.Item>
+              </div>
         );
     }
 
