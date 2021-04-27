@@ -3,8 +3,9 @@ import {Form, Input,InputNumber, Button, message} from 'antd';
 import ImagePicker from "../../components/goods/image-picker";
 import PicturesWall from "../../components/goods/pictures-wall";
 import CategoryTag from "../../components/goods/category-tag";
-import {reqcategorys,reqgoodsspec} from '../../api/index';
+import {reqcategorys,reqgoodsspec,reqfreightlist} from '../../api/index';
 import GoodsSku from "../../components/goods/goods-sku";
+import GoodsFreight from "../../components/goods/goods-freight";
 
 export default class ProductEdit extends Component {
     state={
@@ -29,7 +30,9 @@ export default class ProductEdit extends Component {
                 weight: null
             }
         ],
-        multiSpec:false
+        multiSpec:false,
+        freightList:[],
+        shippingCostSelect: 'freight',
     };
 
     showImage=()=>{
@@ -77,6 +80,32 @@ export default class ProductEdit extends Component {
         }
     };
 
+    getFreight=async ()=>{
+        const response = await reqfreightlist({page:1,rows:1000});
+        console.log("请求成功",response);
+        if(response.code===0){
+            console.log(response);
+            this.setState({
+                freight:response.result.list
+            });
+        }else{
+            message.error(response.msg);
+        }
+    };
+
+    refreshfreightList =async () => {
+        const response = await reqfreightlist({page:1,rows:1000});
+        console.log("请求成功",response);
+        if(response.code===0){
+            console.log(response);
+            this.setState({
+                freight:response.result.list
+            });
+        }else{
+            message.error(response.msg);
+        }
+    }
+
     setSkus=(skus)=>{
         this.setState({
             skus
@@ -87,6 +116,9 @@ export default class ProductEdit extends Component {
         this.getCategory();
         //分类列表
         this.getGoodsSpec();
+
+        //运费模板
+        this.getFreight();
 
         //sku列表
         // this.setState({
@@ -222,7 +254,7 @@ export default class ProductEdit extends Component {
 
 
     render() {
-        const {modalVisible,images,categorys,specList,skus,multiSpec}=this.state;
+        const {modalVisible,images,categorys,specList,skus,multiSpec,freightList,shippingCostSelect}=this.state;
         console.log("images",images);
         console.log("skus",skus);
 
@@ -336,7 +368,13 @@ export default class ProductEdit extends Component {
 
 
 
-
+                    <GoodsFreight
+                        layout={layout}
+                        freightList={freightList}
+                        shippingCostSelect={shippingCostSelect}
+                        refreshfreightList={this.refreshfreightList}
+                        freight_fee={0}
+                    />
 
 
 

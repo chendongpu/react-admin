@@ -34,3 +34,5 @@ export const reqgoodsspecadd=(values)=>ajax('/admin/goodsspec/add',values,'POST'
 export const reqgoodsspecvalueadd=(values)=>ajax('/admin/Goodsspecvalue/add',values,'POST',headers);
 
 export const reqgoodsspecvaluedel=(values)=>ajax('/admin/Goodsspecvalue/del',values,'POST',headers);
+
+export const reqfreightlist=(values)=>ajax('/admin/freight/list',values,'POST',headers);
